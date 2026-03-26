@@ -1,0 +1,10 @@
+*.db
+.env
+__pycache__/
+*.pyc
+node_modules/
+dist/
+.superpowers/
+.worktrees/
+docs/
+README_ARCHITECTURE.md
