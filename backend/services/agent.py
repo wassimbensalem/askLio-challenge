@@ -202,6 +202,7 @@ Valid recommendation values: "approve", "review", "reject".
 
     messages = [{"role": "system", "content": system_prompt}]
     client = AsyncOpenAI()
+    vendor_known = False  # track across iterations to skip redundant search
 
     for _ in range(8):
         response = await client.chat.completions.create(
@@ -247,11 +248,16 @@ Valid recommendation values: "approve", "review", "reject".
                 )
             elif name == "check_policy":
                 result = check_policy(request, db)
+                vendor_known = result.get("vendor_known", False)
                 step = f"✓ Policy: {result['tier_note']} {result['vendor_note']}"
             elif name == "search_vendor":
-                result = await search_vendor(request.vendor_name)
-                summary = result["summary"][:120]
-                step = f"✓ Vendor: {summary}" if result["found"] else f"⚠ Vendor: {summary}"
+                if vendor_known:
+                    result = {"found": True, "summary": "Vendor already verified — prior approved request on record."}
+                    step = "✓ Vendor: already verified from prior approved request — search skipped"
+                else:
+                    result = await search_vendor(request.vendor_name)
+                    summary = result["summary"][:120]
+                    step = f"✓ Vendor: {summary}" if result["found"] else f"⚠ Vendor: {summary}"
             else:
                 result = {"error": f"Unknown tool: {name}"}
                 step = f"⚠ Unknown tool: {name}"
