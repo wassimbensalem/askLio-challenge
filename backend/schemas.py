@@ -129,6 +129,7 @@ class ExtractionResponse(BaseModel):
     title: Optional[str] = None
     vendor_name: Optional[str] = None
     vat_id: Optional[str] = None
+    requestor_name: Optional[str] = None
     department: Optional[str] = None
     order_lines: List[OrderLineCreate] = []
     total_cost: Optional[float] = None

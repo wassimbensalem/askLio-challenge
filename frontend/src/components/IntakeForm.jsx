@@ -34,7 +34,8 @@ export default function IntakeForm({ onSubmitSuccess }) {
       title: data.title || prev.title,
       vendor_name: data.vendor_name || '',
       vat_id: data.vat_id || '',
-      department: data.department || '',
+      requestor_name: data.requestor_name || prev.requestor_name,
+      department: data.department || prev.department,
       commodity_group_id: data.commodity_group_id || '',
       commodity_group_name: data.commodity_group_name || '',
     }))

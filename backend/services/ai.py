@@ -75,6 +75,7 @@ Return a JSON object with EXACTLY this structure (use null for fields you cannot
   "title": "string — a concise 3-8 word description of what is being purchased (e.g. 'Adobe Creative Cloud Annual License', 'Office Furniture Q1 2024'). Focus on the product/service, not the vendor name.",
   "vendor_name": "string or null",
   "vat_id": "string or null",
+  "requestor_name": "string or null",
   "department": "string or null",
   "order_lines": [
     {{
@@ -89,6 +90,26 @@ Return a JSON object with EXACTLY this structure (use null for fields you cannot
   "commodity_group_id": "string",
   "commodity_group_name": "string"
 }}
+
+CRITICAL RULES:
+1. vendor_name: Extract the SELLER — the company that issued this document to offer/sell goods or services. Use these signals to identify the seller:
+   - "Erstellt von:" column (= "Created by" = seller)
+   - The company name appearing in the document body text as the sender (e.g. "herzlichen Dank für Ihre Anfrage bei [SELLER]")
+   - The email domain of the contact person (e.g. lisa.holz@stylegreen.de → seller is styleGREEN)
+   - Product brand names that match the seller (e.g. all products are "styleGREEN INDIVIDUAL" → seller is styleGREEN)
+   IMPORTANT — German letter convention: In German Angebot/Rechnung, the RECIPIENT (buyer) address block appears at the TOP of the letter. Do NOT confuse the recipient address with the vendor. The company name near the top in the address block IS the buyer, not the seller.
+
+2. vat_id: Extract the VAT/USt-ID (labeled "USt-ID", "UID:", "USt-IdNr.", "Steuernummer") of the SELLER (same company as vendor_name). In columns like "Erstellt von: ... UID: DE...", the UID belongs to the seller. Do NOT extract the buyer's VAT ID.
+
+3. requestor_name: The person at the BUYER company who requested this purchase. In German letters, this is the person named in the recipient/customer address block at the top (e.g. "z.Hd. Name" or simply the contact name listed with the buyer's company). "Bearbeiter:" is the SELLER's account manager — do not use this name as requestor_name.
+
+4. department: Extract if explicitly mentioned, otherwise null.
+
+5. total_cost: NET total BEFORE VAT. Include shipping/transport net costs. Look for "Positionen netto", "Nettosumme", "Zwischensumme" (subtotal before VAT). Do NOT use gross totals including VAT (Gesamtsumme, Endsumme inkl. MwSt).
+
+6. order_lines: Only confirmed/selected items. Skip alternatives labeled "Alt.", "Alternative" — these are optional and not being ordered. Apply any discounts — total_price is the final net discounted price per line.
+
+7. Commodity groups: Physical hardware (laptops, computers, phones, monitors) = 029 Hardware. Software licenses/subscriptions = 031 Software. Office decoration, moss walls, plants, wall art = 015 Office Equipment or 012 Facility Management. Do NOT classify physical items as Software.
 
 Select the most appropriate commodity group from this list:
 {commodity_groups}
@@ -106,6 +127,7 @@ Return a JSON object with EXACTLY this structure (use null for fields you cannot
   "title": "concise 3-8 word title describing what is being purchased (e.g. 'MacBook Pro for Engineering Team')",
   "vendor_name": null,
   "vat_id": null,
+  "requestor_name": "extract the person's name if they mention their name or sign off with it (e.g. 'I'm Anna' or 'Thanks, Markus') or null",
   "department": "infer from context if mentioned (e.g. 'engineering', 'marketing') or null",
   "order_lines": [
     {{
