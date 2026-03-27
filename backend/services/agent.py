@@ -107,6 +107,14 @@ async def search_vendor(vendor_name: str) -> dict:
             data = resp.json()
             abstract = data.get("AbstractText", "").strip()
             if abstract:
+                # Discard results that are clearly not a company
+                non_company_signals = [
+                    "planet", "gas giant", "solar system", "astronomical",
+                    "constellation", "star ", "galaxy", "moon ", "orbit",
+                    "mountain", "river", "country", "city in ", "municipality",
+                ]
+                if any(s in abstract.lower() for s in non_company_signals):
+                    return {"found": False, "summary": f"No business information found for '{canonical}'."}
                 return {"found": True, "summary": abstract[:500]}
             return {"found": False, "summary": f"No public information found for '{canonical}'."}
     except Exception as exc:
