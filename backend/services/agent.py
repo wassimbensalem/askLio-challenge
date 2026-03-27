@@ -190,7 +190,7 @@ REQUEST:
 INSTRUCTIONS:
 1. Call validate_request to check field validity.
 2. Call check_policy to apply procurement thresholds.
-3. Call search_vendor to verify vendor legitimacy.
+3. Call search_vendor to verify vendor legitimacy — SKIP this step if check_policy returned vendor_known=true, since the vendor is already verified from a prior approved request.
 4. After all tool calls, produce your final recommendation.
 
 Your final message MUST end with this JSON block (no other JSON in the message):
