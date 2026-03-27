@@ -127,7 +127,7 @@ Return a JSON object with EXACTLY this structure (use null for fields you cannot
   "title": "concise 3-8 word title describing what is being purchased (e.g. 'MacBook Pro for Engineering Team')",
   "vendor_name": null,
   "vat_id": null,
-  "requestor_name": "extract the person's name if they mention their name or sign off with it (e.g. 'I'm Anna' or 'Thanks, Markus') or null",
+  "requestor_name": "person's name if explicitly mentioned (e.g. 'I'm Anna', 'Thanks, Markus') — use JSON null if unknown, never the string \"null\"",
   "department": "infer from context if mentioned (e.g. 'engineering', 'marketing') or null",
   "order_lines": [
     {{

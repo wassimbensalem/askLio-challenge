@@ -27,17 +27,19 @@ export default function IntakeForm({ onSubmitSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
+  const str = (val) => (val && val !== 'null' ? val : null)
+
   const handleExtracted = (data) => {
     setExtracted(data)
     setForm((prev) => ({
       ...prev,
-      title: data.title || prev.title,
-      vendor_name: data.vendor_name || '',
-      vat_id: data.vat_id || '',
-      requestor_name: data.requestor_name || prev.requestor_name,
-      department: data.department || prev.department,
-      commodity_group_id: data.commodity_group_id || '',
-      commodity_group_name: data.commodity_group_name || '',
+      title: str(data.title) || prev.title,
+      vendor_name: str(data.vendor_name) || '',
+      vat_id: str(data.vat_id) || '',
+      requestor_name: str(data.requestor_name) || prev.requestor_name,
+      department: str(data.department) || prev.department,
+      commodity_group_id: str(data.commodity_group_id) || '',
+      commodity_group_name: str(data.commodity_group_name) || '',
     }))
     if (data.order_lines?.length > 0) {
       setOrderLines(data.order_lines)
