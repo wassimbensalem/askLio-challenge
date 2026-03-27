@@ -110,7 +110,10 @@ async def search_vendor(vendor_name: str) -> dict:
                 },
                 headers={"User-Agent": "procurement-agent/1.0"},
             )
-            data = resp.json()
+            try:
+                data = resp.json()
+            except Exception:
+                return {"found": False, "summary": f"No public information found for '{canonical}'."}
             abstract = data.get("AbstractText", "").strip()
             if abstract:
                 # Ask GPT to verify the result is actually about a company
