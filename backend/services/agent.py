@@ -113,13 +113,21 @@ async def search_vendor(vendor_name: str) -> dict:
             data = resp.json()
             abstract = data.get("AbstractText", "").strip()
             if abstract:
-                # Discard results that are clearly not a company
-                non_company_signals = [
-                    "planet", "gas giant", "solar system", "astronomical",
-                    "constellation", "star ", "galaxy", "moon ", "orbit",
-                    "mountain", "river", "country", "city in ", "municipality",
-                ]
-                if any(s in abstract.lower() for s in non_company_signals):
+                # Ask GPT to verify the result is actually about a company
+                client = AsyncOpenAI()
+                check = await client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[{
+                        "role": "user",
+                        "content": (
+                            f"Does this text describe a company, business, or organisation? "
+                            f"Reply with only YES or NO.\n\n{abstract[:300]}"
+                        ),
+                    }],
+                    max_tokens=3,
+                )
+                is_company = check.choices[0].message.content.strip().upper().startswith("YES")
+                if not is_company:
                     return {"found": False, "summary": f"No business information found for '{canonical}'."}
                 return {"found": True, "summary": abstract[:500]}
             return {"found": False, "summary": f"No public information found for '{canonical}'."}
