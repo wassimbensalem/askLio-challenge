@@ -24,12 +24,18 @@ export default function FormFields({ values, onChange, extracted }) {
     }`
   }
 
+  const AIBadge = ({ field }) =>
+    isExtracted(field) ? (
+      <span className="ml-1 text-teal-600 font-normal normal-case">✦</span>
+    ) : null
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
             Requestor Name <span className="text-red-400">*</span>
+            <AIBadge field="requestor_name" />
           </label>
           <input
             className={inputClass('requestor_name')}
@@ -45,6 +51,7 @@ export default function FormFields({ values, onChange, extracted }) {
         <div>
           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
             Department <span className="text-red-400">*</span>
+            <AIBadge field="department" />
           </label>
           <input
             className={inputClass('department')}
@@ -62,6 +69,7 @@ export default function FormFields({ values, onChange, extracted }) {
       <div>
         <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
           Title / Short Description <span className="text-red-400">*</span>
+          <AIBadge field="title" />
         </label>
         <input
           className={inputClass('title')}
@@ -79,6 +87,7 @@ export default function FormFields({ values, onChange, extracted }) {
         <div>
           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
             Vendor Name <span className="text-red-400">*</span>
+            <AIBadge field="vendor_name" />
           </label>
           <input
             className={inputClass('vendor_name')}
@@ -94,6 +103,7 @@ export default function FormFields({ values, onChange, extracted }) {
         <div>
           <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
             VAT ID (Umsatzsteuer-ID) <span className="text-red-400">*</span>
+            <AIBadge field="vat_id" />
           </label>
           <input
             className={inputClass('vat_id', !!vatError)}

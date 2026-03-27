@@ -30,6 +30,7 @@ export default function OrderLinesTable({ lines, onChange, extracted }) {
       <div className="flex items-center justify-between mb-2">
         <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
           Order Lines <span className="text-red-400">*</span>
+          {isExtracted && <span className="ml-1 text-teal-600 font-normal normal-case">✦</span>}
         </label>
         <button
           type="button"
