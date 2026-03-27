@@ -101,7 +101,7 @@ CRITICAL RULES:
 
 2. vat_id: Extract the VAT/USt-ID (labeled "USt-ID", "UID:", "USt-IdNr.", "Steuernummer") of the SELLER (same company as vendor_name). In columns like "Erstellt von: ... UID: DE...", the UID belongs to the seller. Do NOT extract the buyer's VAT ID.
 
-3. requestor_name: The person at the BUYER company who requested this purchase. In German letters, this is the person named in the recipient/customer address block at the top (e.g. "z.Hd. Name" or simply the contact name listed with the buyer's company). "Bearbeiter:" is the SELLER's account manager — do not use this name as requestor_name.
+3. requestor_name: The person at the BUYER company who requested this purchase. In German letters, this is the person named in the recipient/customer address block at the top (e.g. "z.Hd. Name" or simply the contact name listed with the buyer's company). "Bearbeiter:" is the SELLER's account manager — do not use this name as requestor_name. If no person is named, use JSON null — never strings like "N/A" or "null".
 
 4. department: Extract if explicitly mentioned, otherwise null.
 
@@ -127,7 +127,7 @@ Return a JSON object with EXACTLY this structure (use null for fields you cannot
   "title": "concise 3-8 word title describing what is being purchased (e.g. 'MacBook Pro for Engineering Team')",
   "vendor_name": null,
   "vat_id": null,
-  "requestor_name": "person's name if explicitly mentioned (e.g. 'I'm Anna', 'Thanks, Markus') — use JSON null if unknown, never the string \"null\"",
+  "requestor_name": "person's name if explicitly mentioned (e.g. 'I'm Anna', 'Thanks, Markus') — use JSON null if unknown, never strings like \"null\" or \"N/A\"",
   "department": "infer from context if mentioned (e.g. 'engineering', 'marketing') or null",
   "order_lines": [
     {{

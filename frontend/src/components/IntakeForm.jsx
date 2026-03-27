@@ -27,7 +27,7 @@ export default function IntakeForm({ onSubmitSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
-  const str = (val) => (val && val !== 'null' ? val : null)
+  const str = (val) => (val && val !== 'null' && val !== 'N/A' && val !== 'n/a' ? val : null)
 
   const handleExtracted = (data) => {
     setExtracted(data)
