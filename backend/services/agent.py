@@ -73,11 +73,17 @@ async def _extract_canonical_name(vendor_name: str) -> str:
             messages=[{
                 "role": "user",
                 "content": (
-                    f"Extract the canonical company name from this vendor name: '{vendor_name}'.\n"
+                    f"You are helping identify a business vendor for a procurement system. "
+                    f"Given this vendor name: '{vendor_name}', return the canonical company name "
+                    "that would best identify it on Wikipedia or a business search. "
+                    "Rules: keep or add a legal suffix (Inc, GmbH, AG, Corp, Ltd) if it removes ambiguity. "
+                    "If the input is a well-known brand operating under a parent/full name, use that "
+                    "(e.g. 'Saturn' the German electronics retailer → 'MediaMarktSaturn'). "
                     "Reply with ONLY the company name, nothing else. "
                     "Examples: 'Apple Business Team' → 'Apple Inc', "
                     "'Dell Technologies GmbH' → 'Dell Technologies', "
-                    "'Random Unknown Co Ltd' → 'Random Unknown Co'."
+                    "'Saturn Electro' → 'MediaMarktSaturn', "
+                    "'Random Unknown Co Ltd' → 'Random Unknown Co Ltd'."
                 ),
             }],
             max_tokens=20,
