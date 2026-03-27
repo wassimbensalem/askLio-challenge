@@ -156,15 +156,17 @@ def _mock_openai_name(canonical: str):
 
 @pytest.mark.asyncio
 async def test_search_vendor_found():
-    # GPT-4o normalizes name, DuckDuckGo finds the company
+    # GPT-4o normalizes name, DuckDuckGo finds the company, GPT confirms it's a company
     mock_ddg = AsyncMock()
     mock_ddg.json = lambda: {
         "AbstractText": "Apple Inc. is an American multinational technology company.",
     }
     with patch("backend.services.agent.AsyncOpenAI") as MockOpenAI, \
          patch("httpx.AsyncClient") as MockClient:
+        # First call: name normalization → "Apple Inc"
+        # Second call: company validation → "YES"
         MockOpenAI.return_value.chat.completions.create = AsyncMock(
-            return_value=_mock_openai_name("Apple Inc")
+            side_effect=[_mock_openai_name("Apple Inc"), _mock_openai_name("YES")]
         )
         MockClient.return_value.__aenter__.return_value.get = AsyncMock(return_value=mock_ddg)
         result = await search_vendor("Apple Business Team")
